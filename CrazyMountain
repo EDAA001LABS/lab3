@@ -1,0 +1,94 @@
+package mountain;
+
+import fractal.*;
+
+public class CrazyMountain extends Fractal {
+	private Point a;
+	private Point b;
+	private Point c;
+	private int lengthAB;
+	private int lengthBC;
+	private int lengthCA;
+	private double alpha_A;
+	private double alpha_B;
+	private double alpha_C;
+
+	public CrazyMountain() {
+		super();
+		a = new Point(50, 200);
+		b = new Point(80, 20);
+		c = new Point(250, 250);
+
+		// Längd AB
+		int ABx = (int) (a.getX() - b.getX());
+		int ABy = (int) (a.getY() - b.getY());
+		int abs_ABx = Math.abs(ABx);
+		int abs_ABy = Math.abs(ABy);
+
+		lengthAB = (int) Math.sqrt(Math.pow(abs_ABx, 2) + Math.pow(abs_ABy, 2));
+
+		// Längd BC
+		int BCx = (int) (b.getX() - c.getX());
+		int BCy = (int) (b.getY() - c.getY());
+		int abs_BCx = Math.abs(BCx);
+		int abs_BCy = Math.abs(BCy);
+
+		lengthBC = (int) Math.sqrt(Math.pow(abs_BCx, 2) + Math.pow(abs_BCy, 2));
+
+		// Längd CA
+		int CAx = (int) (c.getX() - a.getX());
+		int CAy = (int) (c.getY() - a.getY());
+		int abs_CAx = Math.abs(CAx);
+		int abs_CAy = Math.abs(CAy);
+
+		lengthCA = (int) Math.sqrt(Math.pow(abs_CAx, 2) + Math.pow(abs_CAy, 2));
+
+	}
+
+	public String getTitle() {
+		return "Mountain2";
+	}
+
+	public void draw(TurtleGraphics turtle) {
+		
+//		turtle.moveTo(a.getX(), a.getY());
+
+		fractalLine(turtle, order, a, b, c);
+		fractalLine(turtle, order, b, c, a);
+		fractalLine(turtle, order, c, a, b);
+
+	}
+
+	private void fractalLine(TurtleGraphics turtle, int order, Point Point1, Point Point2, Point Point3) {
+		if (order == 0) {
+			turtle.moveTo(Point1.getX(), Point1.getY());
+			turtle.forwardTo(Point2.getX(), Point2.getY());
+		} else {
+			for (int i = 0; i < Math.pow(2, order-1); i++) {
+								
+				double STARTfact = ((1 +2*i) / (Math.pow(2, order)));
+				double ENDfact = ((Math.pow(2, order) - (1+2*i) ) / (Math.pow(2, order)) );
+				
+				double OneToTwoX = Math.abs(a.getX() - b.getX());
+				double OneToTwoY = Math.abs(a.getY() - b.getY());
+				
+				double TwoToThreeX = Math.abs(b.getX() - c.getX());
+				double TwoToThreeY = Math.abs(b.getY() - c.getY());
+				
+//				Point START = new Point(STARTfact * (a.getX() - b.getX()), STARTfact*(a.getY() - b.getY()));
+				Point START = new Point(Point1.getX() + (STARTfact * (OneToTwoX)), Point1.getY() + (STARTfact*(OneToTwoY)));
+				Point END = new Point(Point2.getX() + (ENDfact * (TwoToThreeX)), Point2.getY() + (ENDfact*(TwoToThreeY)));
+				
+				System.out.println(START.getX() + " " + START.getY());
+				
+				turtle.moveTo(START.getX(), START.getY());
+				turtle.forwardTo(END.getX(), END.getY());
+				
+				
+//				turtle.forward( ((1+2*i) * lengthAB) / (Math.pow(2, order)));
+//				turtle.forwardTo( ((Math.pow(2, order) - (1+ 2*i)) * lengthBC) / (Math.pow(2, order)));
+			}
+			fractalLine(turtle, order-1, Point1, Point2, Point3);
+		}
+	}
+}
