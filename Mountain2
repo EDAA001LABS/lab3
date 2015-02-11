@@ -1,0 +1,78 @@
+package mountain;
+
+import fractal.*;
+
+public class Mountain2 extends Fractal {
+	private Point a;
+	private Point b;
+	private Point c;
+	private int lengthAB;
+	private int lengthBC;
+	private int lengthCA;
+	private double alpha_A;
+	private double alpha_B;
+	private double alpha_C;
+
+	public Mountain2() {
+		super();
+		a = new Point(100, 450);
+		b = new Point(280, 50);
+		c = new Point(500, 500);
+	}
+
+	public String getTitle() {
+		return "Mountain2";
+	}
+
+	public void draw(TurtleGraphics turtle) {
+		fractalLine(turtle, order, a, b, c);
+		fractalLine(turtle, order, b, c, a);
+		fractalLine(turtle, order, c, a, b);
+	}
+
+	private void fractalLine(TurtleGraphics turtle, int order, Point Point1, Point Point2, Point Point3) {
+		if (order == 0) {
+			turtle.moveTo(Point1.getX(), Point1.getY());
+			turtle.forwardTo(Point2.getX(), Point2.getY());
+		} else {
+			for (int i = 0; i < Math.pow(2, order-1); i++) {
+								
+				double STARTfact = ((1 +2*i) / (Math.pow(2, order)));
+				double ENDfact = ((Math.pow(2, order) - (1+2*i) ) / (Math.pow(2, order)) );
+				
+				double OneToTwoX = Math.abs(Point1.getX() - Point2.getX());
+				double OneToTwoY = Math.abs(Point1.getY() - Point2.getY());
+				
+				double TwoToThreeX = Math.abs(Point2.getX() - Point3.getX());
+				double TwoToThreeY = Math.abs(Point2.getY() - Point3.getY());
+				
+				int START_flipX = 1;
+				if (Point1.getX() > Point2.getX()) {
+					START_flipX *= -1;
+				}
+				
+				int START_flipY = 1;
+				if (Point1.getY() > Point2.getY()) {
+					START_flipY *= -1;
+				}
+				
+				int END_flipX = 1;
+				if (Point2.getX() > Point3.getX()) {
+					END_flipX *= -1;
+				}
+				
+				int END_flipY = 1;
+				if (Point2.getY() > Point3.getY()) {
+					END_flipY *= -1;
+				}
+				
+				Point START = new Point(Point1.getX() + START_flipX * (STARTfact * (OneToTwoX)), Point1.getY() + START_flipY * (STARTfact*(OneToTwoY)));
+				Point END = new Point(Point2.getX() + END_flipX * (ENDfact * (TwoToThreeX)), Point2.getY() + END_flipY * (ENDfact*(TwoToThreeY)));
+								
+				turtle.moveTo(START.getX(), START.getY());
+				turtle.forwardTo(END.getX(), END.getY());				
+			}
+			fractalLine(turtle, order-1, Point1, Point2, Point3);
+		}
+	}
+}
