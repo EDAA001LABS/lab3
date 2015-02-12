@@ -1,0 +1,64 @@
+package mountain;
+
+import fractal.*;
+
+public class Mountain3 extends Fractal {
+	private Point a;
+	private Point b;
+	private Point c;
+	private double dev;
+	private double t;
+
+	public Mountain3() {
+		super();
+		a = new Point(100, 450);
+		b = new Point(280, 50);
+		c = new Point(500, 500);
+		dev = 0.05;
+	}
+
+	public String getTitle() {
+		return "Perfect Mountain";
+	}
+
+	public void draw(TurtleGraphics turtle) {
+		fractalLine(turtle, order, a, b, c);
+	}
+	
+	public static double randFunc(double dev) {
+		double t = dev * Math.sqrt(-2 * Math.log(Math.random()));
+		if (Math.random() < 0.5)
+			t = -t;
+		return t;
+	}
+	
+	private Point getMiddle(Point a, Point b) {
+		double midX = (a.getX() + b.getX())/2;
+		double midY = (a.getY() + b.getY())/2;
+		Point midpoint = new Point(midX,midY);
+		return midpoint;
+	}
+
+	private void fractalLine(TurtleGraphics turtle, int order, Point Point1, Point Point2, Point Point3) {
+		this.t = randFunc(dev);
+		t = t / Math.pow(2, order);
+		if (order == 0) {
+			turtle.moveTo(Point1.getX(),  Point1.getY());
+			turtle.forwardTo(Point2.getX(), Point2.getY());
+			turtle.forwardTo(Point3.getX(), Point3.getY());
+			turtle.forwardTo(Point1.getX(), Point1.getY());
+		} else {
+			Point m12 = getMiddle(Point1, Point2);
+			Point m12dev = new Point(m12.getX(), m12.getY() + t * m12.getY());
+			Point m23 = getMiddle(Point2, Point3);
+			Point m23dev = new Point(m23.getX(), m23.getY() + t * m23.getY());
+			Point m31 = getMiddle(Point3, Point1);
+			Point m31dev = new Point(m31.getX(), m31.getY() + t * m31.getY());
+			
+			fractalLine(turtle, order-1, m12dev, m23dev, m31dev);
+			fractalLine(turtle, order-1, Point1, m12dev, m31dev);
+			fractalLine(turtle, order-1, m12dev, Point2, m23dev);
+			fractalLine(turtle, order-1, m31dev, m23dev, Point3);
+		}
+	}
+}
