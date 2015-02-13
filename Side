@@ -1,0 +1,18 @@
+package mountain;
+
+public class Side {
+	public Point Point1;
+	public Point Point2;
+	public Point midpoint;
+
+	public Side(Point Point1, Point Point2, Point MidPoint) {
+		this.Point1 = Point1;
+		this.Point2 = Point2;
+		this.midpoint = MidPoint;
+	}
+	
+//	public Side getSide(Point Point1, Point Point2) {
+//		Side side = new Side(Point1, Point2, Mountain3.getMiddle(Point1, Point2));
+//		return side;
+//	}
+}
